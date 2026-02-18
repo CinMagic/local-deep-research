@@ -27,3 +27,46 @@ To provide a "Strategic Operational Audit" for health and wellness clinics. This
 - **Port Hangs:** `lsof -i :5000` -> `kill -9 <PID>`
 - **Process Reset:** `pkill -f python`
 - **Environment Sync:** Always `git add -f <file>`, `Commit`, and `Sync` before closing.
+
+## Quick Reference: Where Everything Lives
+
+Root (top level of Codespace)
+
+.env
+Purpose: Stores RouteLLM keys.
+Rule: Local only, never commit.
+Content pattern:
+OPENAI_API_KEY=...
+OPENAI_API_BASE=https://routellm.abacus.ai/v1
+
+test_clinic_logic.py
+Role: Single-lead tester.
+Use: Quickly check that your prompt + .env + RouteLLM all work.
+Run:
+python3 test_clinic_logic.py
+
+clinic_leads.csv
+Role: Batch input.
+Use: Dump raw lead inquiries (from a clinic’s export, or sample data) to audit.
+
+clinic_batch_audit.py
+Role: Batch runner (the Engine).
+Use: Reads clinic_leads.csv, applies your prompt to each row, writes results.
+Run:
+python3 clinic_batch_audit.py
+
+clinic_audit_results.csv
+Role: Batch output (the Product).
+Use: Open in Excel / Sheets to show the clinic:
+Fit Score / Urgency / Potential Value (inside the AI’s narrative)
+Recommended Action
+Draft Message
+
+Repo (inside project folders)
+prompts/health-clinics/lead_qualifier_v1.md
+Role: Your clinic triage strategy (IP).
+Use: Defines how the AI grades leads (Fit, Urgency, Value).
+Used by both test_clinic_logic.py and clinic_batch_audit.py.
+Rule: This is committed and versioned. Future versions become v2, v3, etc.
+
+
