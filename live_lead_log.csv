@@ -1,0 +1,14 @@
+Timestamp,Score,Inquiry,Full Verdict
+2026-02-18 03:03:00,10,"I have severe shoulder pain for 6 months, ready to book, have insurance.","**Fit Score:** 10/10  
+**Urgency:** High  
+**Potential Value:** High  
+**Reasoning:**  
+- Patient reported severe shoulder pain persisting for 6 months, which aligns with typical conditions we can treat.  
+- They are ""ready to book,"" indicating immediate intent and urgency.  
+- Mention of insurance suggests they likely have the means to proceed with treatment.  
+- Duration of pain (chronic) indicates a potential need for multiple sessions, increasing treatment value.  
+
+**Recommended Action:** Prioritize this inquiry for immediate follow-up and booking. Assign staff to confirm insurance details and schedule the first appointment within the next 14 days.  
+
+**Draft Message:**  
+""Hi [Patient Name], thank you for reaching out! We’re sorry to hear about your shoulder pain and are here to help. We're happy to assist you in scheduling an appointment to get started with your care—do mornings or afternoons work better for you this week? Additionally, could you please confirm your insurance provider so we can verify coverage? Looking forward to assisting you!"""
