@@ -1,0 +1,57 @@
+id,inquiry,audit_result
+1,"Chronic neck pain for 2 years, has insurance, ready now.","**Fit Score:** 9/10  
+**Urgency:** High  
+**Potential Value:** High  
+
+**Reasoning:**  
+- Chronic neck pain aligns well with services typically offered by physiotherapy or chiropractic clinics.  
+- Patient has insurance, indicating potential to afford care and cover costs.  
+- Expressed readiness to start now, suggesting immediate intent to book an appointment.  
+- Chronic condition implies a likely need for multiple sessions, increasing long-term value.  
+
+**Recommended Action:**  
+Prioritize scheduling by forwarding the inquiry directly to front-desk staff for immediate outreach within the next few hours. Verify clinic match for their specific insurance provider.  
+
+**Draft Message:**  
+""Thank you for reaching out! We’re sorry to hear about your ongoing neck pain and are here to help. Our clinic specializes in treating conditions like yours, and we'd love to assist you in finding relief. Can we schedule you for an appointment to get started? We accept insurance and will confirm coverage for you. Let us know if you have any preferred dates or times available!"""
+2,"Just looking for general pricing for massage, no specific pain.","**Fit Score:** 6/10  
+**Urgency:** Low  
+**Potential Value:** Medium  
+**Reasoning:**  
+- Inquiry is generalized and does not indicate a pressing medical or rehabilitative need.  
+- Massage services could fit, but intent to book is unclear and not time-sensitive.  
+- Pricing-only inquiries often indicate price shopping, so conversion potential is uncertain.  
+- No detailed information about conditions or willingness to pay for premium services.  
+
+**Recommended Action:**  
+Follow up with a friendly response providing broad pricing details while emphasizing the value of our services. Invite them to book a consultation or first treatment session.  
+
+**Draft Message:**  
+""Thank you for reaching out! Our massage therapy sessions are tailored to meet your specific wellness goals. Pricing typically starts at [INSERT SPECIFIC PRICING]. We'd love to help you feel your best—let us know if you'd like to book a session or learn more about how we can assist you!"""
+3,"Acute knee injury from soccer yesterday, very swollen, needs urgent help.","**Fit Score:** 9/10  
+**Urgency:** High  
+**Potential Value:** Medium  
+
+**Reasoning:**  
+- Clear acute injury with swelling indicates need for immediate care that falls within our clinic's scope (e.g., physiotherapy).  
+- Injury occurred recently (yesterday), which increases urgency to provide care and prevent further complications.  
+- Likely to need follow-up sessions if initial assessment and care are provided, contributing to value potential.  
+- Information gap: Confirmation if they are already seeking emergency care or imaging (e.g., X-ray) for fracture or ligament damage.  
+
+**Recommended Action:** Prioritize scheduling their appointment as soon as possible for an initial assessment. Front-desk staff should confirm if they have consulted an ER or undergone imaging to rule out severe underlying issues.  
+
+**Draft Message:**  
+""Thank you for reaching out. I'm sorry to hear about your knee injury—it sounds very painful! We recommend scheduling an appointment with one of our specialists as soon as possible to assess the injury and begin treatment. Have you already visited an ER or had imaging done, such as an X-ray, to rule out serious issues? Let us know, and we’ll work to get you the care you need promptly.""  "
+4,"Interested in wellness retreat, no medical issues.","**Fit Score:** 3/10  
+**Urgency:** Low  
+**Potential Value:** Low  
+**Reasoning:**  
+- Inquiry is related to a wellness retreat, not clinical or medical services.  
+- No indication of a medical condition or treatment need.  
+- Likely outside the scope of our services unless we explicitly offer wellness programs or retreats.  
+- Unclear if this aligns with our clinic type or goals.  
+
+**Recommended Action:** Politely confirm that wellness retreats are not part of our offerings and suggest alternative resources if possible.  
+
+**Draft Message:**  
+""Thank you for reaching out! While we specialize in clinical health and wellness services, we do not currently offer wellness retreats. You may want to explore dedicated wellness retreat providers in your area or online. Let us know if there's a health-related need we can assist you with!"" "
