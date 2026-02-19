@@ -1,14 +1,5 @@
-Timestamp,Score,Inquiry,Full Verdict
-2026-02-19 02:07:42,9,"I have severe shoulder pain for 6 months, ready to book, have insurance.","**Fit Score:** 9/10  
-**Urgency:** High  
-**Potential Value:** High  
-**Reasoning:**  
-- Severe shoulder pain persisting for 6 months indicates a likely need for physiotherapy or chiropractic care, aligning well with clinic services.  
-- Ready to book and mentions having insurance, showing both immediacy and ability to pay.  
-- Chronic condition could require multiple visits, increasing lifetime value.  
-- Clear intent and fit for care; no referral seems necessary.  
-
-**Recommended Action:** Staff to call or email immediately to book a consultation within the next 7 days. Confirm insurance coverage details.  
-
-**Draft Message:**  
-""Hi [Name], thank you for reaching out! We’re sorry to hear about your ongoing shoulder pain and are here to help. We can book you in for a consultation with one of our specialists as soon as possible. Could you let us know your availability this week? Additionally, please confirm the type of insurance you have so we can assist further. We look forward to helping you feel better!"""
+Timestamp,Score,Action,Reasoning,DraftMessage,Inquiry,FullResponse
+2026-02-19 03:10:21,9/10,Proceed to book an appointment as soon as possible.,"The patient has been experiencing severe shoulder pain for an extended period, indicating high clinical need. They are ready to book and have insurance, demonstrating both urgency and financial fit. This aligns well with our clinic's services.","Thank you for reaching out! We understand how challenging shoulder pain can be, and we’re here to help. Let’s get you scheduled for an appointment at your earliest convenience. Could you let us know your availability in the next two weeks?","I have severe shoulder pain for 6 months, ready to book, have insurance.","Score: 9/10  
+Action: Proceed to book an appointment as soon as possible.  
+Reasoning: The patient has been experiencing severe shoulder pain for an extended period, indicating high clinical need. They are ready to book and have insurance, demonstrating both urgency and financial fit. This aligns well with our clinic's services.  
+DraftMessage: Thank you for reaching out! We understand how challenging shoulder pain can be, and we’re here to help. Let’s get you scheduled for an appointment at your earliest convenience. Could you let us know your availability in the next two weeks?"

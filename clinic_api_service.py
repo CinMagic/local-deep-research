@@ -1,14 +1,13 @@
 import os
 import csv
-import re
 from datetime import datetime
 from flask import Flask, request, jsonify, render_template_string
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# 1. Setup
 load_dotenv()
 app = Flask(__name__)
+
 client = OpenAI(
     base_url=os.getenv("OPENAI_API_BASE"),
     api_key=os.getenv("OPENAI_API_KEY")
@@ -19,104 +18,108 @@ with open("prompts/health-clinics/lead_qualifier_v1.md", "r") as f:
 
 LOG_FILE = "live_lead_log.csv"
 
-def extract_score(text):
-    match = re.search(r"(\d+)/10", text)
-    return match.group(1) if match else "N/A"
+def get_field(text, field):
+    field = field.lower()
+    for line in text.splitlines():
+        line = line.strip()
+        if line.lower().startswith(field + ":"):
+            return line.split(":", 1)[1].strip()
+    return "N/A"
 
-@app.route('/triage', methods=['POST'])
-def triage_lead():
-    data = request.json
-    inquiry = data.get('inquiry', '')
-    
+def parse_response(text):
+    return {
+        "score": get_field(text, "Score"),
+        "action": get_field(text, "Action"),
+        "reasoning": get_field(text, "Reasoning"),
+        "draft": get_field(text, "DraftMessage"),
+        "full": text
+    }
+
+@app.route("/triage", methods=["POST"])
+def triage():
+    data = request.json or {}
+    inquiry = data.get("inquiry", "").strip()
+
     if not inquiry:
         return jsonify({"error": "No inquiry provided"}), 400
 
-    # 2. Run AI Logic
-    response = client.chat.completions.create(
+    resp = client.chat.completions.create(
         model="gpt-4o",
-        messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": inquiry}]
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": inquiry}
+        ]
     )
-    
-    verdict = response.choices[0].message.content
-    score = extract_score(verdict)
 
-    # 3. Log to CSV
+    full_text = resp.choices[0].message.content
+    parsed = parse_response(full_text)
+
     file_exists = os.path.isfile(LOG_FILE)
-    with open(LOG_FILE, mode='a', newline='', encoding='utf-8') as f:
+    with open(LOG_FILE, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if not file_exists:
-            writer.writerow(["Timestamp", "Score", "Inquiry", "Full Verdict"])
-        writer.writerow([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), score, inquiry, verdict])
+            writer.writerow([
+                "Timestamp", "Score", "Action",
+                "Reasoning", "DraftMessage",
+                "Inquiry", "FullResponse"
+            ])
+        writer.writerow([
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            parsed["score"],
+            parsed["action"],
+            parsed["reasoning"],
+            parsed["draft"],
+            inquiry,
+            parsed["full"]
+        ])
 
-    # 4. High-Urgency Alert Trigger
-    try:
-        if score != "N/A" and int(score) >= 9:
-            print("\n" + "!"*50)
-            print("🚨 URGENT ALERT: HIGH-VALUE LEAD IDENTIFIED! 🚨")
-            print(f"Score: {score}/10")
-            print(f"Inquiry: {inquiry[:100]}...")
-            print("ACTION: Notify Front Desk via SMS/Slack Immediately!")
-            print("!"*50 + "\n")
-    except ValueError:
-        pass 
+    return jsonify(parsed)
 
-    return jsonify({"score": score, "verdict": verdict})
-
-# 5. NEW: Dashboard Route
-@app.route('/dashboard')
+@app.route("/dashboard")
 def dashboard():
-    leads = []
+    rows = []
     if os.path.isfile(LOG_FILE):
-        with open(LOG_FILE, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            leads = list(reader)
-    
-    # Reverse so newest leads appear first
-    leads.reverse()
-    
+        with open(LOG_FILE, "r", encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+    rows.reverse()
+
     html = """
-    <!DOCTYPE html>
     <html>
     <head>
-        <title>Clinic Lead Dashboard</title>
+        <title>Clinic Triage Dashboard</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
-            h1 { color: #333; }
-            table { width: 100%; border-collapse: collapse; background: white; }
-            th { background: #4CAF50; color: white; padding: 12px; text-align: left; }
-            td { padding: 10px; border-bottom: 1px solid #ddd; }
-            tr:hover { background: #f1f1f1; }
-            .high-score { background: #ffeb3b; font-weight: bold; }
-            .score { font-size: 18px; font-weight: bold; }
+            body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; }
+            .card { background: #fff; padding: 20px; border-radius: 10px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 1400px; margin: 0 auto; }
+            h1 { margin-top: 0; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th { background: #4CAF50; color: white; padding: 10px; text-align: left; }
+            td { padding: 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
+            tr.urgent { background: #fff9c4; }
+            .small { font-size: 12px; color: #555; }
         </style>
     </head>
     <body>
-        <h1>🏥 Clinic Lead Triage Dashboard</h1>
-        <p>Total Leads: {{ total }}</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Timestamp</th>
-                    <th>Score</th>
-                    <th>Inquiry</th>
-                    <th>Verdict (Preview)</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for lead in leads %}
-                <tr class="{% if lead.Score|int >= 9 %}high-score{% endif %}">
-                    <td>{{ lead.Timestamp }}</td>
-                    <td class="score">{{ lead.Score }}/10</td>
-                    <td>{{ lead.Inquiry[:100] }}...</td>
-                    <td>{{ lead['Full Verdict'][:150] }}...</td>
+        <div class="card">
+            <h1>🏥 Clinic Triage Dashboard</h1>
+            <table>
+                <tr><th>Time</th><th>Score</th><th>Action</th><th>Reasoning</th><th>Draft Message</th><th>Inquiry</th></tr>
+                {% for r in rows %}
+                <tr class="{% if '9' in r.Score or '10' in r.Score %}urgent{% endif %}">
+                    <td>{{ r.Timestamp }}</td>
+                    <td>{{ r.Score }}</td>
+                    <td>{{ r.Action }}</td>
+                    <td class="small">{{ r.Reasoning }}</td>
+                    <td class="small">{{ r.DraftMessage }}</td>
+                    <td>{{ r.Inquiry[:80] }}{% if r.Inquiry|length > 80 %}...{% endif %}</td>
                 </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+            </table>
+        </div>
     </body>
     </html>
     """
-    return render_template_string(html, leads=leads, total=len(leads))
+    return render_template_string(html, rows=rows)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5001)
